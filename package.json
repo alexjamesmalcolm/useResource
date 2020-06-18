@@ -1,5 +1,11 @@
 {
-  "name": "use-resource",
+  "name": "@alexjamesmalcolm/use-resource",
+  "author": {
+    "name": "Alex Malcolm",
+    "email": "alexjamesmalcolm@gmail.com",
+    "url": "https://alexjamesmalcolm.com"
+  },
+  "private": false,
   "version": "0.1.0",
   "main": "build/index.js",
   "scripts": {
