@@ -81,8 +81,7 @@ const useResource = (
       Object.fromEntries(
         Object.entries(otherActions).map(([key, value]) => [
           key,
-          async function () {
-            const args = [...arguments];
+          async (...args) => {
             dispatchActionInitial();
             try {
               const data = await value(...args);

@@ -21,10 +21,10 @@ interface Action {
 const initialState = { resourceHashTable: {} };
 
 const reducer = (state = initialState, action: Action) => {
-  const { resourceId, data, error, filterCallback } = action.data;
-  if (!resourceId) return state;
+  // if (!resourceId) return state;
   switch (action.type) {
     case REQUEST_INITIAL: {
+      const { resourceId } = action.data;
       return {
         ...state,
         resourceHashTable: {
@@ -38,6 +38,7 @@ const reducer = (state = initialState, action: Action) => {
       };
     }
     case REQUEST_SUCCESS: {
+      const { resourceId, data } = action.data;
       return {
         ...state,
         resourceHashTable: {
@@ -51,6 +52,7 @@ const reducer = (state = initialState, action: Action) => {
       };
     }
     case REQUEST_FAILURE: {
+      const { resourceId, error } = action.data;
       return {
         ...state,
         resourceHashTable: {
@@ -64,6 +66,7 @@ const reducer = (state = initialState, action: Action) => {
       };
     }
     case CLEAR_CACHED_RESOURCE: {
+      const { filterCallback } = action.data;
       return {
         ...state,
         resourcehashTable: Object.fromEntries(
@@ -73,6 +76,8 @@ const reducer = (state = initialState, action: Action) => {
         ),
       };
     }
+    default:
+      return state;
   }
 };
 
