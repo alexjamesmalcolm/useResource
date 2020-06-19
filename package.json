@@ -6,11 +6,11 @@
     "url": "https://alexjamesmalcolm.com"
   },
   "private": false,
-  "version": "0.1.10",
+  "version": "0.1.11",
   "main": "output/index.js",
   "scripts": {
     "start": "react-scripts start",
-    "build": "tsc",
+    "build": "tsc --noEmit false --module CommonJS",
     "test": "react-scripts test"
   },
   "peerDependencies": {
