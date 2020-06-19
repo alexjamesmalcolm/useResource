@@ -46,11 +46,11 @@ const useResource = (
     [dispatch, resourceId]
   );
   const dispatchActionSuccess = useCallback(
-    (data) => dispatch(requestSuccess(resourceId, data)),
+    (data: any) => dispatch(requestSuccess(resourceId, data)),
     [dispatch, resourceId]
   );
   const dispatchActionFailure = useCallback(
-    (error) => {
+    (error: Error) => {
       console.warn(error);
       dispatch(requestFailure(resourceId, error));
     },
@@ -81,7 +81,7 @@ const useResource = (
       Object.fromEntries(
         Object.entries(otherActions).map(([key, value]) => [
           key,
-          async (...args) => {
+          async (...args: any[]) => {
             dispatchActionInitial();
             try {
               const data = await value(...args);
