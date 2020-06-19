@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import useResource from "../lib";
+import useResource from "./lib";
 
 const App = () => {
   const getResourceId = useCallback(() => {
@@ -12,7 +12,11 @@ const App = () => {
       ),
     []
   );
-  const { isLoading, data } = useResource(getResourceId, { getResource });
+  const { isLoading, data } = useResource(
+    getResourceId,
+    { getResource },
+    { ttl: 5000 }
+  );
   if (isLoading || !data) return <p>Loading...</p>;
   console.log(data);
   return (

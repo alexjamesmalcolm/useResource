@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from "redux";
-import { reducer as useResource } from "../lib";
+import { reducer as useResource } from "./lib";
 
 const rootReducer = combineReducers({ useResource });
 

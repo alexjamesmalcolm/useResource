@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import * as useResource from "../lib";
+import * as useResource from "./lib";
 
 it("renders without crashing", () => {
   const useResourceSpy = jest.spyOn(useResource, "default");
