@@ -4,10 +4,10 @@ import {
   REQUEST_FAILURE,
   CLEAR_CACHED_RESOURCE,
 } from "./actionTypes";
-import { ResourceId, FilterCallback } from "./types";
+import { FilterCallback, Resource } from "./types";
 
 interface ActionData {
-  resourceId: ResourceId;
+  resourceId: string;
   data?: any;
   error?: Error;
   filterCallback: FilterCallback;
@@ -18,50 +18,61 @@ interface Action {
   data: ActionData;
 }
 
-const initialState = { resourceHashTable: {} };
+interface ResourceHashTable {
+  [resourceId: string]: Resource;
+}
 
-const reducer = (state = initialState, action: Action) => {
-  // if (!resourceId) return state;
+interface State {
+  resourceHashTable: ResourceHashTable;
+}
+
+const initialState: State = { resourceHashTable: {} };
+
+const reducer = (state: State = initialState, action: Action) => {
   switch (action.type) {
     case REQUEST_INITIAL: {
       const { resourceId } = action.data;
+      const resource: Resource = {
+        isLoading: true,
+        error: false,
+        data: null,
+      };
       return {
         ...state,
         resourceHashTable: {
           ...state.resourceHashTable,
-          [resourceId]: {
-            isLoading: true,
-            error: false,
-            data: null,
-          },
+          [resourceId]: resource,
         },
       };
     }
     case REQUEST_SUCCESS: {
       const { resourceId, data } = action.data;
+      const resource: Resource = {
+        isLoading: false,
+        error: false,
+        data,
+        acquiredDate: new Date(),
+      };
       return {
         ...state,
         resourceHashTable: {
           ...state.resourceHashTable,
-          [resourceId]: {
-            isLoading: false,
-            error: false,
-            data,
-          },
+          [resourceId]: resource,
         },
       };
     }
     case REQUEST_FAILURE: {
       const { resourceId, error } = action.data;
+      const resource: Resource = {
+        isLoading: false,
+        error,
+        data: null,
+      };
       return {
         ...state,
         resourceHashTable: {
           ...state.resourceHashTable,
-          [resourceId]: {
-            isLoading: false,
-            error,
-            data: null,
-          },
+          [resourceId]: resource,
         },
       };
     }

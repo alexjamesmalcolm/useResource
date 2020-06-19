@@ -8,28 +8,35 @@ import {
 } from "./actions";
 import { GetResourceId, FilterCallback } from "./types";
 
-interface CachedData {
+interface RetrievedResource {
   isLoading: boolean;
   isInStore: boolean;
   data: any;
   error: Error | boolean;
+  acquiredDate?: Date;
 }
 
 const useResource = (
   getResourceId: string | GetResourceId,
   actions: { getResource: Function; [key: string]: Function },
-  options: { acquireImmediately?: boolean } = {}
+  options: { acquireImmediately?: boolean; ttl?: number } = {}
 ) => {
   const { getResource, ...otherActions } = actions;
-  const { acquireImmediately = true } = options;
+  const { acquireImmediately = true, ttl = 0 } = options;
   const resourceId = useMemo(
     () =>
       typeof getResourceId === "function" ? getResourceId() : getResourceId,
     [getResourceId]
   );
   const dispatch = useDispatch();
-  const { data, isLoading, error, isInStore = true } = useSelector(
-    (state: any): CachedData => {
+  const {
+    data,
+    isLoading,
+    error,
+    isInStore = true,
+    acquiredDate,
+  } = useSelector(
+    (state: any): RetrievedResource => {
       const { resourceHashTable } = state.useResource;
       const requestData = resourceHashTable[resourceId];
       const defaultData = {
@@ -105,8 +112,27 @@ const useResource = (
     ]
   );
   useEffect(() => {
-    if (!isLoading && !isInStore && acquireImmediately) getResourceWithCache();
-  }, [acquireImmediately, getResourceWithCache, isInStore, isLoading]);
+    if (!isLoading && !isInStore && acquireImmediately) {
+      getResourceWithCache();
+    } else if (acquiredDate) {
+      const timeLeft = ttl - (Date.now() - acquiredDate.getTime());
+      if (timeLeft > 0) {
+        const timeoutId = setTimeout(() => {
+          getResourceWithCache();
+        }, timeLeft);
+        return () => clearTimeout(timeoutId);
+      } else {
+        getResourceWithCache();
+      }
+    }
+  }, [
+    acquireImmediately,
+    acquiredDate,
+    getResourceWithCache,
+    isInStore,
+    isLoading,
+    ttl,
+  ]);
   return {
     actions: { ...otherActionsWithCache, getResource: getResourceWithCache },
     isLoading,
