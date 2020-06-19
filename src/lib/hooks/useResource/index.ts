@@ -114,7 +114,7 @@ const useResource = (
   useEffect(() => {
     if (!isLoading && !isInStore && acquireImmediately) {
       getResourceWithCache();
-    } else if (acquiredDate) {
+    } else if (acquiredDate && ttl) {
       const timeLeft = ttl - (Date.now() - acquiredDate.getTime());
       if (timeLeft > 0) {
         const timeoutId = setTimeout(() => {
