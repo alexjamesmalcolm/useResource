@@ -1,38 +1,25 @@
-This project was bootstrapped with [Create React Library](https://github.com/dimimikadze/create-react-library).
+# useResource
 
-All library files are located inside **src/lib** folder.
+This is a React custom hook meant for assisting in the retrieval of remote data and the caching of it once acquired.
 
-Inside **src/demo** folder, you can test your library while developing.
+## Setup
 
-## Available Scripts
+###### TODO: Document this
 
-In the project directory, you can run:
+## Documentation
 
-### `npm start` or `yarn start`
+### Time-sensitive data
 
-Runs the library in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+###### TODO: Document this
 
-### `npm run test` or `yarn run test`
+### Acquiring Immediately
 
-Runs the test watcher in an interactive mode.
+###### TODO: Document this
 
-### `npm run build` or `yarn build`
+### Creating, Updating, and Deleting the Resource
 
-Builds the library for production to the `build` folder.
-It correctly bundles React in production mode and optimizes the build for the best performance.
+###### TODO: Document this
 
-### `npm publish`
+### Clearing the Cache
 
-Publishes the library to NPM.
-
-## Typescript
-
-[Adding Typescript support](https://gist.github.com/DimiMikadze/f25e1c5c70fa003953afd40fa9042517)
-
-## Troubleshooting
-
-### Usage of other libraries within your library
-
-- Add the library as a peer dependency in package.json (effectively requiring the calling project to provide this dependency)
-- Add the library as a dev dependency in package.json (effectively allowing this library to successfully build without complaining about not having this dependency)
-- Add the library to the externals config in your webpack.config file(s). By default, only react and react-dom are there, meaning that those are the only two libraries that you can use within your new shared library.
+###### TODO: Document this
