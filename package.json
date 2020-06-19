@@ -6,7 +6,7 @@
     "url": "https://alexjamesmalcolm.com"
   },
   "private": false,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "output/index.js",
   "scripts": {
     "start": "react-scripts start",
