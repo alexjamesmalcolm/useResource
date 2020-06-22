@@ -6,7 +6,7 @@ import {
   requestFailure,
   clearCachedResource,
 } from "./actions";
-import { GetResourceId, FilterCallback } from "./types";
+import { FilterCallback } from "./types";
 
 interface RetrievedResource {
   isLoading: boolean;
@@ -31,7 +31,7 @@ interface Actions {
 }
 
 const useResource = <T extends Actions>(
-  getResourceId: string | GetResourceId,
+  getResourceId: string | (() => string),
   actions: T,
   options: { acquireImmediately?: boolean; ttl?: number } = {}
 ): UseResourceResponse<T> => {

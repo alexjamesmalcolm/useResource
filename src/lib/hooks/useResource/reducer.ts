@@ -4,7 +4,14 @@ import {
   REQUEST_FAILURE,
   CLEAR_CACHED_RESOURCE,
 } from "./actionTypes";
-import { FilterCallback, Resource } from "./types";
+import { FilterCallback } from "./types";
+
+interface Resource {
+  isLoading: boolean;
+  error: Error | false | undefined;
+  data: any;
+  acquiredDate?: Date;
+}
 
 interface ActionData {
   resourceId: string;
