@@ -22,7 +22,7 @@
     "url": "https://github.com/alexjamesmalcolm/use-resource.git"
   },
   "private": false,
-  "version": "0.1.14",
+  "version": "0.1.15",
   "main": "output/index.js",
   "scripts": {
     "start": "react-scripts start",
