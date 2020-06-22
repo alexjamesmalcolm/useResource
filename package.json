@@ -27,7 +27,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "rm -rf output && tsc --noEmit false --module CommonJS",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "output-size": "node ./get-size.js"
   },
   "peerDependencies": {
     "react": "^16.13.1",
@@ -39,6 +40,7 @@
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.38",
     "@types/react-redux": "^7.1.9",
+    "get-folder-size": "^2.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
