@@ -87,7 +87,7 @@ const reducer = (state: State = initialState, action: Action) => {
       const { filterCallback } = action.data;
       return {
         ...state,
-        resourcehashTable: Object.fromEntries(
+        resourceHashTable: Object.fromEntries(
           Object.entries(
             state.resourceHashTable
           ).filter(([resourceId, value]) => filterCallback(resourceId, value))
