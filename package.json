@@ -5,6 +5,18 @@
     "email": "alexjamesmalcolm@gmail.com",
     "url": "https://alexjamesmalcolm.com"
   },
+  "keywords": [
+    "react",
+    "redux",
+    "react redux",
+    "hook",
+    "react hook",
+    "cache",
+    "caching",
+    "promise",
+    "async",
+    "ttl"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/alexjamesmalcolm/use-resource.git"
