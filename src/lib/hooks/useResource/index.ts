@@ -12,15 +12,29 @@ interface RetrievedResource {
   isLoading: boolean;
   isInStore: boolean;
   data: any;
-  error: Error | boolean;
+  error: Error | false;
   acquiredDate?: Date;
 }
 
-const useResource = (
+interface UseResourceResponse<T extends Actions> {
+  actions: T;
+  isLoading: boolean;
+  error: Error | false;
+  data: any;
+  isInStore: boolean;
+  filterCache: Function;
+}
+
+interface Actions {
+  getResource: () => Promise<any>;
+  [key: string]: (() => Promise<any>) | (() => Promise<void>);
+}
+
+const useResource = <T extends Actions>(
   getResourceId: string | GetResourceId,
-  actions: { getResource: Function; [key: string]: Function },
+  actions: T,
   options: { acquireImmediately?: boolean; ttl?: number } = {}
-) => {
+): UseResourceResponse<T> => {
   const { getResource, ...otherActions } = actions;
   const { acquireImmediately = true, ttl = 0 } = options;
   const resourceId = useMemo(
@@ -74,8 +88,10 @@ const useResource = (
     try {
       const data = await getResource();
       dispatchActionSuccess(data);
+      return data;
     } catch (error) {
       dispatchActionFailure(error);
+      throw error;
     }
   }, [
     dispatchActionFailure,
@@ -96,9 +112,11 @@ const useResource = (
                 getResourceWithCache();
               } else {
                 dispatchActionSuccess(data);
+                return data;
               }
             } catch (error) {
               dispatchActionFailure(error);
+              throw error;
             }
           },
         ])
@@ -133,8 +151,12 @@ const useResource = (
     isLoading,
     ttl,
   ]);
+  const cachedActions: T = {
+    ...otherActionsWithCache,
+    getResource: getResourceWithCache,
+  } as T;
   return {
-    actions: { ...otherActionsWithCache, getResource: getResourceWithCache },
+    actions: cachedActions,
     isLoading,
     error,
     data,
