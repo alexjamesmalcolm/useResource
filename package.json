@@ -5,6 +5,10 @@
     "email": "alexjamesmalcolm@gmail.com",
     "url": "https://alexjamesmalcolm.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexjamesmalcolm/use-resource.git"
+  },
   "private": false,
   "version": "0.1.14",
   "main": "output/index.js",
