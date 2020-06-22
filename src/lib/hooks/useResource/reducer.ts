@@ -8,7 +8,7 @@ import { FilterCallback } from "./types";
 
 interface Resource {
   isLoading: boolean;
-  error: Error | false | undefined;
+  error?: Error;
   data: any;
   acquiredDate?: Date;
 }
@@ -33,70 +33,60 @@ interface State {
   resourceHashTable: ResourceHashTable;
 }
 
+const modifyState = ({
+  state,
+  resourceId,
+  resource,
+}: {
+  state: State;
+  resourceId: any;
+  resource: Resource;
+}): State => ({
+  ...state,
+  resourceHashTable: { ...state.resourceHashTable, [resourceId]: resource },
+});
+
 const initialState: State = { resourceHashTable: {} };
 
 const reducer = (state: State = initialState, action: Action) => {
-  switch (action.type) {
-    case REQUEST_INITIAL: {
-      const { resourceId } = action.data;
-      const resource: Resource = {
-        isLoading: true,
-        error: false,
-        data: null,
-      };
-      return {
-        ...state,
-        resourceHashTable: {
-          ...state.resourceHashTable,
-          [resourceId]: resource,
-        },
-      };
-    }
-    case REQUEST_SUCCESS: {
-      const { resourceId, data } = action.data;
-      const resource: Resource = {
+  if (action.type === REQUEST_INITIAL)
+    return modifyState({
+      resource: { isLoading: true, data: null },
+      resourceId: action.data.resourceId,
+      state,
+    });
+  if (action.type === REQUEST_SUCCESS)
+    return modifyState({
+      resource: {
         isLoading: false,
-        error: false,
-        data,
+        data: action.data.data,
         acquiredDate: new Date(),
-      };
-      return {
-        ...state,
-        resourceHashTable: {
-          ...state.resourceHashTable,
-          [resourceId]: resource,
-        },
-      };
-    }
-    case REQUEST_FAILURE: {
-      const { resourceId, error } = action.data;
-      const resource: Resource = {
+      },
+      resourceId: action.data.resourceId,
+      state,
+    });
+  if (action.type === REQUEST_FAILURE)
+    return modifyState({
+      resource: {
         isLoading: false,
-        error,
+        error: action.data.error,
         data: null,
-      };
-      return {
-        ...state,
-        resourceHashTable: {
-          ...state.resourceHashTable,
-          [resourceId]: resource,
-        },
-      };
-    }
-    case CLEAR_CACHED_RESOURCE: {
-      const { filterCallback } = action.data;
-      return {
-        ...state,
-        resourceHashTable: Object.fromEntries(
-          Object.entries(
-            state.resourceHashTable
-          ).filter(([resourceId, value]) => filterCallback(resourceId, value))
-        ),
-      };
-    }
-    default:
-      return state;
+      },
+      resourceId: action.data.resourceId,
+      state,
+    });
+  if (action.type === CLEAR_CACHED_RESOURCE) {
+    const { filterCallback } = action.data;
+    return {
+      ...state,
+      resourceHashTable: Object.fromEntries(
+        Object.entries(state.resourceHashTable).filter(([resourceId, value]) =>
+          filterCallback(resourceId, value)
+        )
+      ),
+    };
   }
+  return state;
 };
 
 export default reducer;
