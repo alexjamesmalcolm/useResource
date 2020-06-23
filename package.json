@@ -1,5 +1,6 @@
 {
   "name": "@alexjamesmalcolm/use-resource",
+  "description": "A React hook that assists in retrieving remote data and caching via redux by abstracting the Auto Effect pattern.",
   "author": {
     "name": "Alex Malcolm",
     "email": "alexjamesmalcolm@gmail.com",
@@ -22,7 +23,7 @@
     "url": "https://github.com/alexjamesmalcolm/use-resource.git"
   },
   "private": false,
-  "version": "0.1.18",
+  "version": "0.1.19",
   "main": "output/index.js",
   "scripts": {
     "start": "react-scripts start",
