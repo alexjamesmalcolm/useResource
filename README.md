@@ -2,6 +2,7 @@
 ![npm](https://img.shields.io/npm/v/@alexjamesmalcolm/use-resource)
 ![Publish](https://github.com/alexjamesmalcolm/use-resource/workflows/Publish/badge.svg)
 ![Build & Test](https://github.com/alexjamesmalcolm/use-resource/workflows/Build%20%26%20Test/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/alexjamesmalcolm/use-resource/badge.svg?branch=master)](https://coveralls.io/github/alexjamesmalcolm/use-resource?branch=master)
 
 # useResource
 
