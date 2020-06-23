@@ -1,3 +1,8 @@
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+![npm](https://img.shields.io/npm/v/@alexjamesmalcolm/use-resource)
+![Publish](https://github.com/alexjamesmalcolm/use-resource/workflows/Publish/badge.svg)
+![Build & Test](https://github.com/alexjamesmalcolm/use-resource/workflows/Build%20%26%20Test/badge.svg)
+
 # useResource
 
 This is a React custom hook meant for assisting in the retrieval of remote data and the caching of it once acquired using redux.
