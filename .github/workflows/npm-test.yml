@@ -15,7 +15,7 @@ jobs:
           node-version: 12
       - run: npm i
       - run: npm run build
-      - run: npm test -- --coverage --collectCoverageFrom=src/lib/**/*.ts --collectCoverageFrom=src/lib/**/*.tsx
+      - run: npm run test:coverage
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:

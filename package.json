@@ -28,6 +28,7 @@
     "start": "react-scripts start",
     "build": "rm -rf output && tsc --noEmit false --module CommonJS",
     "test": "react-scripts test",
+    "test:coverage": "npm test -- --coverage --collectCoverageFrom=src/lib/**/*.ts --collectCoverageFrom=src/lib/**/*.tsx",
     "output-size": "node ./get-size.js"
   },
   "peerDependencies": {
