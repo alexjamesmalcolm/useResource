@@ -1,7 +1,8 @@
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 ![npm](https://img.shields.io/npm/v/@alexjamesmalcolm/use-resource)
-![Build & Test](https://github.com/alexjamesmalcolm/use-resource/workflows/Build%20%26%20Test/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/alexjamesmalcolm/use-resource/badge.svg?branch=master)](https://coveralls.io/github/alexjamesmalcolm/use-resource?branch=master)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/alexjamesmalcolm/use-resource/Build%20%26%20Test)
+![Coveralls github](https://img.shields.io/coveralls/github/alexjamesmalcolm/use-resource)
+![npm bundle size](https://img.shields.io/bundlephobia/min/@alexjamesmalcolm/use-resource)
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
 # useResource
 
