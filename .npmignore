@@ -27,3 +27,4 @@ UPGRADE.md
 .storybook
 .github
 tsconfig.json
+get-size.js
