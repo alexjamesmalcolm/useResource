@@ -6,12 +6,9 @@ import reducer from "./reducer";
 import { createStore, combineReducers } from "redux";
 
 const wait = async (callback, time) =>
-  new Promise((resolve) => {
-    setTimeout(async () => {
-      const result = await callback();
-      resolve(result);
-    }, time);
-  });
+  new Promise((resolve) =>
+    setTimeout(async () => resolve(await callback()), time)
+  );
 
 const store = createStore(combineReducers({ useResource: reducer }));
 
@@ -38,13 +35,9 @@ describe("useResource", () => {
     const getResource = () => Promise.resolve(data);
     const underTest = mount(
       <Wrapper>
-        <UnderTest
-          getResource={getResource}
-          resourceId={resourceId}
-        ></UnderTest>
+        <UnderTest getResource={getResource} resourceId={resourceId} />
       </Wrapper>
     );
-    console.log(underTest.debug());
     expect(underTest.debug().includes("Loading...")).toBe(true);
     wait(() => {
       expect(underTest.debug().includes(data)).toBe(true);
