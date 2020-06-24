@@ -5,7 +5,7 @@ import useResource from ".";
 import reducer from "./reducer";
 import { createStore, combineReducers } from "redux";
 
-const wait = async (callback, time) =>
+const wait = async (time: number, callback: Function = () => {}) =>
   new Promise((resolve) =>
     setTimeout(async () => resolve(await callback()), time)
   );
@@ -39,8 +39,6 @@ describe("useResource", () => {
       </Wrapper>
     );
     expect(underTest.debug().includes("Loading...")).toBe(true);
-    wait(() => {
-      expect(underTest.debug().includes(data)).toBe(true);
-    }, 1000);
+    wait(1000, () => expect(underTest.debug().includes(data)).toBe(true));
   });
 });
