@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from "react";
 import useStoredResource from "./useStoredResource";
-import { FilterCallback } from "./types";
+import { FilterCallback, Actions } from "./types";
 import useActions from "./useActions";
 import useGetterActionWithCache from "./useGetterActionWithCache";
+import useOtherActionsWithCache from "./useOtherActionsWithCache";
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;
@@ -13,17 +14,12 @@ interface UseResourceResponse<T extends Actions> {
   filterCache: (filterCallback: FilterCallback) => void;
 }
 
-interface Actions {
-  getResource: () => Promise<any>;
-  [key: string]: (() => Promise<any>) | (() => Promise<void>);
-}
-
 const useResource = <T extends Actions>(
   getResourceId: string | (() => string),
   actions: T,
   options: { acquireImmediately?: boolean; ttl?: number } = {}
 ): UseResourceResponse<T> => {
-  const { getResource, ...otherActions } = actions;
+  const { getResource } = actions;
   const { acquireImmediately = true, ttl = 0 } = options;
   const resourceId = useMemo(
     () =>
@@ -33,35 +29,12 @@ const useResource = <T extends Actions>(
   const { acquiredDate, data, error, isInStore, isLoading } = useStoredResource(
     resourceId
   );
-  const { failure, initial, success, filterCache } = useActions(resourceId);
+  const { filterCache } = useActions(resourceId);
   const getResourceWithCache = useGetterActionWithCache(
     resourceId,
     getResource
   );
-  const otherActionsWithCache = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(otherActions).map(([key, value]) => [
-          key,
-          async (...args: any[]) => {
-            initial();
-            try {
-              const data = await value(...args);
-              if (data === undefined) {
-                getResourceWithCache();
-              } else {
-                success(data);
-                return data;
-              }
-            } catch (error) {
-              failure(error);
-              throw error;
-            }
-          },
-        ])
-      ),
-    [failure, initial, success, getResourceWithCache, otherActions]
-  );
+  const otherActionsWithCache = useOtherActionsWithCache(resourceId, actions);
   useEffect(() => {
     if (!isLoading && !isInStore && acquireImmediately) {
       getResourceWithCache();
