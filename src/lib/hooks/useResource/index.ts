@@ -22,7 +22,7 @@ interface UseResourceResponse<T extends Actions> {
   error: Error | false;
   data: any;
   isInStore: boolean;
-  filterCache: Function;
+  filterCache: (filterCallback: FilterCallback) => void;
 }
 
 interface Actions {
