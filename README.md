@@ -147,3 +147,5 @@ export default Setup;
 - Internalize state management so `reducer` does not need to be exported
 - Allow passing a function instead of a number to `ttl` in case it needs to be determined programmatically.
 - Mask my personal email address with GitHub's privacy email address
+- Implement dependency array to replace `resourceId`
+- Somehow get a unique identifier from supplied `getResource` function to replace `resourceId`
