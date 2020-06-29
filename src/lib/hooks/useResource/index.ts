@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import useStoredResource from "../useStoredResource";
 import {
   requestInitial,
   requestSuccess,
@@ -7,14 +8,6 @@ import {
   clearCachedResource,
 } from "./actions";
 import { FilterCallback } from "./types";
-
-interface RetrievedResource {
-  isLoading: boolean;
-  isInStore: boolean;
-  data: any;
-  error: Error | false;
-  acquiredDate?: Date;
-}
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;
@@ -43,24 +36,8 @@ const useResource = <T extends Actions>(
     [getResourceId]
   );
   const dispatch = useDispatch();
-  const {
-    data,
-    isLoading,
-    error,
-    isInStore = true,
-    acquiredDate,
-  } = useSelector(
-    (state: any): RetrievedResource => {
-      const { resourceHashTable } = state.useResource;
-      const requestData = resourceHashTable[resourceId];
-      const defaultData = {
-        data: null,
-        isLoading: false,
-        error: false,
-        isInStore: false,
-      };
-      return requestData || defaultData;
-    }
+  const { acquiredDate, data, error, isInStore, isLoading } = useStoredResource(
+    resourceId
   );
   const dispatchActionInitial = useCallback(
     () => dispatch(requestInitial(resourceId)),
