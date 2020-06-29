@@ -1,5 +1,5 @@
-import useResource from "./hooks/useResource";
-import reducer from "./hooks/useResource/reducer";
+import useResource from "./useResource";
+import reducer from "./useResource/reducer";
 
 export { reducer };
 export default useResource;

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useCallback } from "react";
-import useStoredResource from "../useStoredResource";
+import useStoredResource from "./useStoredResource";
 import { FilterCallback } from "./types";
-import useActions from "../useActions";
+import useActions from "./useActions";
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;

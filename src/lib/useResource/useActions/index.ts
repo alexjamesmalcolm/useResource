@@ -5,8 +5,8 @@ import {
   requestSuccess,
   requestFailure,
   clearCachedResource,
-} from "../useResource/actions";
-import { FilterCallback } from "../useResource/types";
+} from "../actions";
+import { FilterCallback } from "../types";
 
 const useActions = (resourceId: string) => {
   const dispatch = useDispatch();
