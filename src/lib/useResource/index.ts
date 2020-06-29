@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import useStoredResource from "./useStoredResource";
 import { FilterCallback, Actions } from "./types";
 import useActions from "./useActions";
 import useGetterActionWithCache from "./useGetterActionWithCache";
 import useOtherActionsWithCache from "./useOtherActionsWithCache";
+import useAcquireEffect from "./useAcquireEffect";
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;
@@ -35,28 +36,15 @@ const useResource = <T extends Actions>(
     getResource
   );
   const otherActionsWithCache = useOtherActionsWithCache(resourceId, actions);
-  useEffect(() => {
-    if (!isLoading && !isInStore && acquireImmediately) {
-      getResourceWithCache();
-    } else if (acquiredDate && ttl) {
-      const timeLeft = ttl - (Date.now() - acquiredDate.getTime());
-      if (timeLeft > 0) {
-        const timeoutId = setTimeout(() => {
-          getResourceWithCache();
-        }, timeLeft);
-        return () => clearTimeout(timeoutId);
-      } else {
-        getResourceWithCache();
-      }
-    }
-  }, [
+  useAcquireEffect({
     acquireImmediately,
     acquiredDate,
-    getResourceWithCache,
+    getResource,
     isInStore,
     isLoading,
+    resourceId,
     ttl,
-  ]);
+  });
   const cachedActions: T = {
     ...otherActionsWithCache,
     getResource: getResourceWithCache,
