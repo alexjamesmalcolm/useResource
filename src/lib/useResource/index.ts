@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import useStoredResource from "./useStoredResource";
 import { FilterCallback } from "./types";
 import useActions from "./useActions";
+import useResourceGetterWithCache from "./useResourceGetterWithCache";
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;
@@ -33,17 +34,10 @@ const useResource = <T extends Actions>(
     resourceId
   );
   const { failure, initial, success, filterCache } = useActions(resourceId);
-  const getResourceWithCache = useCallback(async () => {
-    initial();
-    try {
-      const data = await getResource();
-      success(data);
-      return data;
-    } catch (error) {
-      failure(error);
-      throw error;
-    }
-  }, [failure, initial, success, getResource]);
+  const getResourceWithCache = useResourceGetterWithCache(
+    resourceId,
+    getResource
+  );
   const otherActionsWithCache = useMemo(
     () =>
       Object.fromEntries(
