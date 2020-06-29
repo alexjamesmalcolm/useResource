@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { useDispatch } from "react-redux";
 import useStoredResource from "../useStoredResource";
-import {
-  requestInitial,
-  requestSuccess,
-  requestFailure,
-  clearCachedResource,
-} from "./actions";
 import { FilterCallback } from "./types";
+import useActions from "../useActions";
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;
@@ -35,76 +29,44 @@ const useResource = <T extends Actions>(
       typeof getResourceId === "function" ? getResourceId() : getResourceId,
     [getResourceId]
   );
-  const dispatch = useDispatch();
   const { acquiredDate, data, error, isInStore, isLoading } = useStoredResource(
     resourceId
   );
-  const dispatchActionInitial = useCallback(
-    () => dispatch(requestInitial(resourceId)),
-    [dispatch, resourceId]
-  );
-  const dispatchActionSuccess = useCallback(
-    (data: any) => dispatch(requestSuccess(resourceId, data)),
-    [dispatch, resourceId]
-  );
-  const dispatchActionFailure = useCallback(
-    (error: Error) => {
-      console.warn(error);
-      dispatch(requestFailure(resourceId, error));
-    },
-    [dispatch, resourceId]
-  );
-  const filterCache = useCallback(
-    (filterCallback: FilterCallback) => {
-      dispatch(clearCachedResource(filterCallback));
-    },
-    [dispatch]
-  );
+  const { failure, initial, success, filterCache } = useActions(resourceId);
   const getResourceWithCache = useCallback(async () => {
-    dispatchActionInitial();
+    initial();
     try {
       const data = await getResource();
-      dispatchActionSuccess(data);
+      success(data);
       return data;
     } catch (error) {
-      dispatchActionFailure(error);
+      failure(error);
       throw error;
     }
-  }, [
-    dispatchActionFailure,
-    dispatchActionInitial,
-    dispatchActionSuccess,
-    getResource,
-  ]);
+  }, [failure, initial, success, getResource]);
   const otherActionsWithCache = useMemo(
     () =>
       Object.fromEntries(
         Object.entries(otherActions).map(([key, value]) => [
           key,
           async (...args: any[]) => {
-            dispatchActionInitial();
+            initial();
             try {
               const data = await value(...args);
               if (data === undefined) {
                 getResourceWithCache();
               } else {
-                dispatchActionSuccess(data);
+                success(data);
                 return data;
               }
             } catch (error) {
-              dispatchActionFailure(error);
+              failure(error);
               throw error;
             }
           },
         ])
       ),
-    [
-      dispatchActionFailure,
-      dispatchActionInitial,
-      dispatchActionSuccess,
-      getResourceWithCache,
-      otherActions,
-    ]
+    [failure, initial, success, getResourceWithCache, otherActions]
   );
   useEffect(() => {
     if (!isLoading && !isInStore && acquireImmediately) {
