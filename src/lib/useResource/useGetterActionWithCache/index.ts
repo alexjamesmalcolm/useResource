@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import useActions from "../useActions";
 
-const useResourceGetterWithCache = (
+const useGetterActionWithCache = (
   resourceId: string,
   getResource: () => Promise<any>
 ) => {
@@ -20,4 +20,4 @@ const useResourceGetterWithCache = (
   return getResourceWithCache;
 };
 
-export default useResourceGetterWithCache;
+export default useGetterActionWithCache;

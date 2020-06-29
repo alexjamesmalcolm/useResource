@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import useStoredResource from "./useStoredResource";
 import { FilterCallback } from "./types";
 import useActions from "./useActions";
-import useResourceGetterWithCache from "./useResourceGetterWithCache";
+import useGetterActionWithCache from "./useGetterActionWithCache";
 
 interface UseResourceResponse<T extends Actions> {
   actions: T;
@@ -34,7 +34,7 @@ const useResource = <T extends Actions>(
     resourceId
   );
   const { failure, initial, success, filterCache } = useActions(resourceId);
-  const getResourceWithCache = useResourceGetterWithCache(
+  const getResourceWithCache = useGetterActionWithCache(
     resourceId,
     getResource
   );
