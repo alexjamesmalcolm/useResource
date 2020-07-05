@@ -21,11 +21,13 @@ const makeWrapper = () => {
 const UnderTest = ({
   resourceId,
   getResource,
+  transformativeAction,
   ttl,
 }: {
   resourceId: any;
   getResource: any;
   ttl?: any;
+  transformativeAction?: () => Promise<any>;
 }) => {
   const {
     actions,
@@ -34,10 +36,28 @@ const UnderTest = ({
     filterCache,
     isInStore,
     isLoading,
-  } = useResource(resourceId, { getResource }, { ttl });
+  } = useResource(
+    resourceId,
+    transformativeAction
+      ? { getResource, transformativeAction }
+      : { getResource },
+    { ttl }
+  );
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  return <pre>{JSON.stringify(data)}</pre>;
+  return (
+    <>
+      <pre>{JSON.stringify(data)}</pre>
+      {actions.transformativeAction && (
+        <button
+          id="transformative-action"
+          onClick={actions.transformativeAction}
+        >
+          Transformative
+        </button>
+      )}
+    </>
+  );
 };
 
 describe("useResource", () => {
@@ -97,5 +117,33 @@ describe("useResource", () => {
     await wait(100);
     underTest.update();
     expect(underTest.debug().includes(errorMessage)).toBe(true);
+  });
+
+  it("should use a transformative action that returns the new state", async () => {
+    const Wrapper = makeWrapper();
+    const resourceId = Date.now() + Math.random();
+    const initial = "initial data";
+    const final = "final data";
+    const getResource = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(initial));
+    const transformativeAction = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(final));
+    const underTest = mount(
+      <Wrapper>
+        <UnderTest
+          getResource={getResource}
+          resourceId={resourceId}
+          transformativeAction={transformativeAction}
+        />
+      </Wrapper>
+    );
+    await wait(100);
+    expect(underTest.update().debug().includes("Loading")).toBe(false);
+    await wait(100);
+    underTest.find("#transformative-action").simulate("click");
+    await wait(100);
+    expect(underTest.update().debug().includes(final)).toBe(true);
   });
 });
