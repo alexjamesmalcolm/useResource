@@ -3,17 +3,20 @@ import useActions from "../useActions";
 import { Actions } from "../types";
 import useGetterActionWithCache from "../useGetterActionWithCache";
 
-const useOtherActionsWithCache = (resourceId: string, actions: Actions) => {
+const useTransformativeActionsWithCache = (
+  resourceId: string,
+  actions: Actions
+) => {
   const { failure, initial, success } = useActions(resourceId);
-  const { getResource, ...otherActions } = actions;
+  const { getResource, ...transformativeActions } = actions;
   const getResourceWithCache = useGetterActionWithCache(
     resourceId,
     getResource
   );
-  const otherActionsWithCache = useMemo(
+  const transformativeActionsWithCache = useMemo(
     () =>
       Object.fromEntries(
-        Object.entries(otherActions).map(([key, value]) => [
+        Object.entries(transformativeActions).map(([key, value]) => [
           key,
           async (...args: any[]) => {
             initial();
@@ -33,9 +36,9 @@ const useOtherActionsWithCache = (resourceId: string, actions: Actions) => {
           },
         ])
       ),
-    [failure, initial, success, getResourceWithCache, otherActions]
+    [failure, initial, success, getResourceWithCache, transformativeActions]
   );
-  return otherActionsWithCache;
+  return transformativeActionsWithCache;
 };
 
-export default useOtherActionsWithCache;
+export default useTransformativeActionsWithCache;

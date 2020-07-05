@@ -3,7 +3,7 @@ import useStoredResource from "./useStoredResource";
 import { FilterCallback, Actions } from "./types";
 import useActions from "./useActions";
 import useGetterActionWithCache from "./useGetterActionWithCache";
-import useOtherActionsWithCache from "./useOtherActionsWithCache";
+import useTransformativeActionsWithCache from "./useTransformativeActionsWithCache";
 import useAcquireEffect from "./useAcquireEffect";
 
 interface UseResourceResponse<T extends Actions> {
@@ -35,7 +35,10 @@ const useResource = <T extends Actions>(
     resourceId,
     getResource
   );
-  const otherActionsWithCache = useOtherActionsWithCache(resourceId, actions);
+  const transformativeActionsWithCache = useTransformativeActionsWithCache(
+    resourceId,
+    actions
+  );
   useAcquireEffect({
     acquireImmediately,
     acquiredDate,
@@ -46,7 +49,7 @@ const useResource = <T extends Actions>(
     ttl,
   });
   const cachedActions: T = {
-    ...otherActionsWithCache,
+    ...transformativeActionsWithCache,
     getResource: getResourceWithCache,
   } as T;
   return {
