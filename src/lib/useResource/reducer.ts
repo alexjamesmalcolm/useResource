@@ -1,9 +1,4 @@
-import {
-  REQUEST_INITIAL,
-  REQUEST_SUCCESS,
-  REQUEST_FAILURE,
-  CLEAR_CACHED_RESOURCE,
-} from "./actionTypes";
+import { actionTypes } from "./actions";
 import { FilterCallback } from "./types";
 
 interface Resource {
@@ -49,13 +44,13 @@ const modifyState = ({
 const initialState: State = { resourceHashTable: {} };
 
 const reducer = (state: State = initialState, action: Action) => {
-  if (action.type === REQUEST_INITIAL)
+  if (action.type === actionTypes.REQUEST_INITIAL)
     return modifyState({
       resource: { isLoading: true, data: null },
       resourceId: action.data.resourceId,
       state,
     });
-  if (action.type === REQUEST_SUCCESS)
+  if (action.type === actionTypes.REQUEST_SUCCESS)
     return modifyState({
       resource: {
         isLoading: false,
@@ -65,7 +60,7 @@ const reducer = (state: State = initialState, action: Action) => {
       resourceId: action.data.resourceId,
       state,
     });
-  if (action.type === REQUEST_FAILURE)
+  if (action.type === actionTypes.REQUEST_FAILURE)
     return modifyState({
       resource: {
         isLoading: false,
@@ -75,7 +70,7 @@ const reducer = (state: State = initialState, action: Action) => {
       resourceId: action.data.resourceId,
       state,
     });
-  if (action.type === CLEAR_CACHED_RESOURCE) {
+  if (action.type === actionTypes.CLEAR_CACHED_RESOURCE) {
     const { filterCallback } = action.data;
     return {
       ...state,
