@@ -20,19 +20,14 @@ const useTransformativeActionsWithCache = (
           key,
           async (...args: any[]) => {
             initial();
-            try {
-              const func: Function = value;
-              const data = await func(...args);
-              if (data === undefined) {
-                getResourceWithCache();
-              } else {
-                success(data);
-                return data;
-              }
-            } catch (error) {
-              failure(error);
-              throw error;
-            }
+            value(...args)
+              .then((data) =>
+                data === undefined ? getResourceWithCache() : success(data)
+              )
+              .catch((error) => {
+                failure(error);
+                throw error;
+              });
           },
         ])
       ),

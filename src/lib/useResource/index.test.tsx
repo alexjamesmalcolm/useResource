@@ -146,4 +146,34 @@ describe("useResource", () => {
     await wait(100);
     expect(underTest.update().debug().includes(final)).toBe(true);
   });
+
+  it("should use a transformative action that does not return the new state", async () => {
+    const Wrapper = makeWrapper();
+    const resourceId = Date.now() + Math.random();
+    const initial = "initial data";
+    const final = "final data";
+    let state = initial;
+    const getResource = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(state));
+    const transformativeAction = jest.fn().mockImplementation(async () => {
+      state = final;
+      return;
+    });
+    const underTest = mount(
+      <Wrapper>
+        <UnderTest
+          getResource={getResource}
+          resourceId={resourceId}
+          transformativeAction={transformativeAction}
+        />
+      </Wrapper>
+    );
+    await wait(100);
+    expect(underTest.update().debug().includes("Loading")).toBe(false);
+    await wait(100);
+    underTest.find("#transformative-action").simulate("click");
+    await wait(100);
+    expect(underTest.update().debug().includes(final)).toBe(true);
+  });
 });
