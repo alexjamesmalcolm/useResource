@@ -10,11 +10,23 @@ const wait = async (time: number, callback: Function = () => {}) =>
     setTimeout(async () => resolve(await callback()), time)
   );
 
-const store = createStore(combineReducers({ useResource: reducer }));
+const makeWrapper = () => {
+  const store = createStore(combineReducers({ useResource: reducer }));
+  const Wrapper = ({ children }) => (
+    <Provider store={store}>{children}</Provider>
+  );
+  return Wrapper;
+};
 
-const Wrapper = ({ children }) => <Provider store={store}>{children}</Provider>;
-
-const UnderTest = ({ resourceId, getResource }) => {
+const UnderTest = ({
+  resourceId,
+  getResource,
+  ttl,
+}: {
+  resourceId: any;
+  getResource: any;
+  ttl?: any;
+}) => {
   const {
     actions,
     data,
@@ -22,7 +34,7 @@ const UnderTest = ({ resourceId, getResource }) => {
     filterCache,
     isInStore,
     isLoading,
-  } = useResource(resourceId, { getResource });
+  } = useResource(resourceId, { getResource }, { ttl });
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   return <pre>{JSON.stringify(data)}</pre>;
@@ -32,13 +44,17 @@ describe("useResource", () => {
   it("should load and then finish after a second", async () => {
     const resourceId = "Resource ID";
     const data = "This is the data that we should be seeing";
-    const getResource = () => Promise.resolve(data);
+    const getResource = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(data));
+    const Wrapper = makeWrapper();
     const underTest = mount(
       <Wrapper>
         <UnderTest getResource={getResource} resourceId={resourceId} />
       </Wrapper>
     );
-    expect(underTest.debug().includes("Loading...")).toBe(true);
-    wait(1000, () => expect(underTest.debug().includes(data)).toBe(true));
+    wait(1000, () =>
+      expect(underTest.update().debug().includes(data)).toBe(true)
+    );
   });
 });
