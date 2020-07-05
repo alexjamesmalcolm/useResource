@@ -57,4 +57,45 @@ describe("useResource", () => {
       expect(underTest.update().debug().includes(data)).toBe(true)
     );
   });
+
+  it("should only keep data for 2 seconds due to 2000 ttl", async () =>
+    new Promise((resolve) => {
+      const Wrapper = makeWrapper();
+      const resourceId = Date.now() + Math.random();
+      const ttl = 2000;
+      const getResource = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve(Date.now()));
+      mount(
+        <Wrapper>
+          <UnderTest
+            getResource={getResource}
+            resourceId={resourceId}
+            ttl={ttl}
+          />
+        </Wrapper>
+      );
+      wait(1000, () => expect(getResource).toBeCalledTimes(1));
+      wait(3000, () => {
+        expect(getResource).toBeCalledTimes(2);
+        resolve();
+      });
+    }));
+
+  it("should display an error when the getResource function fails", async () => {
+    const Wrapper = makeWrapper();
+    const resourceId = Date.now() + Math.random();
+    const errorMessage = "Whoopsie there was a problem";
+    const getResource = jest
+      .fn()
+      .mockImplementation(() => Promise.reject(new Error(errorMessage)));
+    const underTest = mount(
+      <Wrapper>
+        <UnderTest getResource={getResource} resourceId={resourceId} />
+      </Wrapper>
+    );
+    await wait(100);
+    underTest.update();
+    expect(underTest.debug().includes(errorMessage)).toBe(true);
+  });
 });

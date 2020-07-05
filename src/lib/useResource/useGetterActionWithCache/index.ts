@@ -6,17 +6,10 @@ const useGetterActionWithCache = (
   getResource: () => Promise<any>
 ) => {
   const { failure, initial, success } = useActions(resourceId);
-  const getResourceWithCache = useCallback(async () => {
+  const getResourceWithCache: () => void = useCallback(() => {
     initial();
-    try {
-      const data = await getResource();
-      success(data);
-      return data;
-    } catch (error) {
-      failure(error);
-      throw error;
-    }
-  }, [failure, initial, success, getResource]);
+    getResource().then(success).catch(failure);
+  }, [failure, getResource, initial, success]);
   return getResourceWithCache;
 };
 
