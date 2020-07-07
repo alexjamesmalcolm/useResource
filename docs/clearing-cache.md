@@ -2,6 +2,6 @@
 title: Clearing the Cache
 ---
 
-# Clearing the Cache
+# {{ page.title }}
 
 ###### TODO: Document this

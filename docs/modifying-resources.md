@@ -1,5 +1,5 @@
 ---
-title: Time Sensitive Data
+title: Modifying Resources
 ---
 
 # {{ page.title }}

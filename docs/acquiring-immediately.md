@@ -2,6 +2,6 @@
 title: Acquiring Immediately
 ---
 
-# Acquiring Immediately
+# {{ page.title }}
 
 ###### TODO: Document this

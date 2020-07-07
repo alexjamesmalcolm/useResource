@@ -8,7 +8,7 @@ nav_order: 0
 
 This is a React custom hook meant for assisting in the retrieval of remote data and the caching of it once acquired using redux.
 
-## Setup
+## {{ page.title }}
 
 This project has two exports, the default which is the `useResource` hook, and a `{ reducer }`.
 
