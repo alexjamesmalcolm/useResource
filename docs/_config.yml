@@ -1,6 +1,5 @@
 exclude:
   - docker-compose.yml
-theme: just-the-docs
 remote_theme: pmarsceill/just-the-docs
 defaults:
   - scope:

@@ -3,7 +3,7 @@ version: "2"
 services:
   jekyll:
     image: jekyll/jekyll:4
-    command: jekyll serve --watch --force_polling --verbose
+    command: jekyll serve --config _config.yml,_local_config.yml --watch --force_polling --verbose
     ports:
       - 4000:4000
     volumes:
