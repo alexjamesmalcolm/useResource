@@ -32,7 +32,8 @@
     "test": "react-scripts test",
     "test:coverage": "npm test -- --watchAll --coverage --collectCoverageFrom=src/lib/**/*.ts --collectCoverageFrom=src/lib/**/*.tsx",
     "test:ci": "cross-env CI=true npm test -- --coverage --collectCoverageFrom=src/lib/**/*.ts --collectCoverageFrom=src/lib/**/*.tsx",
-    "output-size": "node ./get-size.js"
+    "output-size": "node ./get-size.js",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "peerDependencies": {
     "react": "^16.13.1",
@@ -46,6 +47,7 @@
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.38",
     "@types/react-redux": "^7.1.9",
+    "auto-changelog": "^2.2.0",
     "cross-env": "^7.0.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
