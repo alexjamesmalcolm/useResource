@@ -24,7 +24,7 @@
   },
   "homepage": "http://www.alexjamesmalcolm.com/use-resource/",
   "private": false,
-  "version": "0.1.22",
+  "version": "0.1.23",
   "main": "output/index.js",
   "scripts": {
     "start": "react-scripts start",
