@@ -28,3 +28,4 @@ UPGRADE.md
 .github
 tsconfig.json
 get-size.js
+docs
