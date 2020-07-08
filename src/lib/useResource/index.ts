@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import useStoredResource from "./useStoredResource";
-import { FilterCallback, Actions } from "./types";
+import { FilterCallback, TtlCallback, Actions } from "./types";
 import useActions from "./useActions";
 import useGetterActionWithCache from "./useGetterActionWithCache";
 import useTransformativeActionsWithCache from "./useTransformativeActionsWithCache";
@@ -18,7 +18,7 @@ interface UseResourceResponse<T extends Actions> {
 const useResource = <T extends Actions>(
   getResourceId: string | (() => string),
   actions: T,
-  options: { acquireImmediately?: boolean; ttl?: number } = {}
+  options: { acquireImmediately?: boolean; ttl?: number | TtlCallback } = {}
 ): UseResourceResponse<T> => {
   const { getResource } = actions;
   const { acquireImmediately = true, ttl = 0 } = options;
@@ -27,9 +27,7 @@ const useResource = <T extends Actions>(
       typeof getResourceId === "function" ? getResourceId() : getResourceId,
     [getResourceId]
   );
-  const { acquiredDate, data, error, isInStore, isLoading } = useStoredResource(
-    resourceId
-  );
+  const { data, error, isInStore, isLoading } = useStoredResource(resourceId);
   const { filterCache } = useActions(resourceId);
   const getResourceWithCache = useGetterActionWithCache(
     resourceId,
@@ -41,10 +39,7 @@ const useResource = <T extends Actions>(
   );
   useAcquireEffect({
     acquireImmediately,
-    acquiredDate,
     getResource,
-    isInStore,
-    isLoading,
     resourceId,
     ttl,
   });

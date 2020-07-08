@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import useResource from ".";
 import reducer from "./reducer";
 import { createStore, combineReducers } from "redux";
+import { TtlCallback } from "./types";
 
 const wait = async (time: number, callback: Function = () => {}) =>
   new Promise((resolve) =>
@@ -24,9 +25,9 @@ const UnderTest = ({
   transformativeAction,
   ttl,
 }: {
-  resourceId: any;
-  getResource: any;
-  ttl?: any;
+  resourceId;
+  getResource;
+  ttl?: number | TtlCallback;
   transformativeAction?: () => Promise<any>;
 }) => {
   const {
@@ -175,5 +176,24 @@ describe("useResource", () => {
     underTest.find("#transformative-action").simulate("click");
     await wait(100);
     expect(underTest.update().debug().includes(final)).toBe(true);
+  });
+  it("should accept a function for ttl", async () => {
+    const Wrapper = makeWrapper();
+    const resourceId = Date.now() + Math.random();
+    const getResource = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve("result"));
+    const ttl = () => 2000;
+    mount(
+      <Wrapper>
+        <UnderTest
+          getResource={getResource}
+          resourceId={resourceId}
+          ttl={ttl}
+        />
+      </Wrapper>
+    );
+    await wait(1000, () => expect(getResource).toBeCalledTimes(1));
+    await wait(3000, () => expect(getResource).toBeCalledTimes(2));
   });
 });

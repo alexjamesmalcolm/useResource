@@ -1,32 +1,34 @@
 import { useEffect } from "react";
 import useGetterActionWithCache from "../useGetterActionWithCache";
+import { TtlCallback } from "../types";
+import useStoredResource from "../useStoredResource";
 
 const useAcquireEffect = ({
-  isLoading,
-  isInStore,
   acquireImmediately,
   resourceId,
   getResource,
-  acquiredDate,
   ttl,
 }: {
-  isLoading: boolean;
-  isInStore: boolean;
   acquireImmediately: boolean;
   resourceId: string;
   getResource: () => Promise<any>;
-  acquiredDate: Date | undefined;
-  ttl: number;
+  ttl: number | TtlCallback;
 }) => {
   const getResourceWithCache = useGetterActionWithCache(
     resourceId,
     getResource
   );
+  const { acquiredDate, data, isInStore, isLoading } = useStoredResource(
+    resourceId
+  );
   useEffect(() => {
     if (!isLoading && !isInStore && acquireImmediately) {
       getResourceWithCache();
     } else if (acquiredDate && ttl) {
-      const timeLeft = ttl - (Date.now() - acquiredDate.getTime());
+      const timeLeft =
+        typeof ttl === "function"
+          ? ttl(resourceId, data)
+          : ttl - (Date.now() - acquiredDate.getTime());
       if (timeLeft > 0) {
         const timeoutId = setTimeout(() => {
           getResourceWithCache();
@@ -39,9 +41,11 @@ const useAcquireEffect = ({
   }, [
     acquireImmediately,
     acquiredDate,
+    data,
     getResourceWithCache,
     isInStore,
     isLoading,
+    resourceId,
     ttl,
   ]);
 };
