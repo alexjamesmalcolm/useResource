@@ -16,6 +16,8 @@ This project has two exports, the default which is the `useResource` hook, and a
 import useResource, { reducer } from "@alexjamesmalcolm/use-resource";
 ```
 
+### Redux
+
 Before being able to use the `useResource` you must first include the `reducer` into your `rootReducer`
 
 ```javascript
@@ -30,6 +32,10 @@ export default store;
 ```
 
 It's very important that the reducer is initialized as `useResource`.
+
+### Wrapped in a Custom Hook
+
+If you're unfamiliar with custom hooks you can read about them in [React's documentation](https://reactjs.org/docs/hooks-custom.html)
 
 It's recommended that `useResource` be used inside of a custom hook. For example you may want a hook that retrieves and pages through lists of breweries thanks to https://www.openbrewerydb.org/
 
@@ -86,7 +92,9 @@ const useBreweries = ({
 export default useBreweries;
 ```
 
-Then we implement `useBreweries`:
+### Using our Custom Hook in a Component
+
+Then we implement `useBreweries` in our example component:
 
 ```jsx
 import React, { useState, useCallback } from "react";
