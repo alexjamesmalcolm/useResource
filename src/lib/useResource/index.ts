@@ -6,20 +6,20 @@ import useGetterActionWithCache from "./useGetterActionWithCache";
 import useTransformativeActionsWithCache from "./useTransformativeActionsWithCache";
 import useAcquireEffect from "./useAcquireEffect";
 
-interface UseResourceResponse<T extends Actions> {
-  actions: T;
+interface UseResourceResponse<T, A extends Actions<T>> {
+  actions: A;
   isLoading: boolean;
   error: Error | false;
-  data: any;
+  data: T;
   isInStore: boolean;
   filterCache: (filterCallback: FilterCallback) => void;
 }
 
-const useResource = <T extends Actions>(
+const useResource = <T, A extends Actions<T>>(
   getResourceId: string | (() => string),
-  actions: T,
+  actions: A,
   options: { acquireImmediately?: boolean; ttl?: number | TtlCallback } = {}
-): UseResourceResponse<T> => {
+): UseResourceResponse<T, A> => {
   const { getResource } = actions;
   const { acquireImmediately = true, ttl = 0 } = options;
   const resourceId = useMemo(
@@ -43,10 +43,10 @@ const useResource = <T extends Actions>(
     resourceId,
     ttl,
   });
-  const cachedActions: T = {
+  const cachedActions: A = {
     ...transformativeActionsWithCache,
     getResource: getResourceWithCache,
-  } as T;
+  } as A;
   return {
     actions: cachedActions,
     isLoading,
