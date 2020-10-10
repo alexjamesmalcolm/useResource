@@ -35,6 +35,9 @@
     "output-size": "node ./get-size.js",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
+  "files": [
+    "output"
+  ],
   "peerDependencies": {
     "react": "^16.13.1",
     "redux": "^2.0.0 || ^3.0.0 || ^4.0.0-0",
