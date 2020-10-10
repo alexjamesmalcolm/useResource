@@ -1,14 +1,16 @@
 import { useCallback } from "react";
 import useActions from "../useActions";
 
-const useGetterActionWithCache = (
+type GetResource<T> = () => Promise<T>;
+
+const useGetterActionWithCache = <T>(
   resourceId: string,
-  getResource: () => Promise<any>
-) => {
-  const { failure, initial, success } = useActions(resourceId);
-  const getResourceWithCache: () => void = useCallback(() => {
+  getResource: GetResource<T>
+): (() => Promise<T | void>) => {
+  const { failure, initial, success } = useActions<T>(resourceId);
+  const getResourceWithCache = useCallback(() => {
     initial();
-    getResource().then(success).catch(failure);
+    return getResource().then(success).catch(failure);
   }, [failure, getResource, initial, success]);
   return getResourceWithCache;
 };

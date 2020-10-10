@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import {
   requestInitial,
@@ -8,14 +8,17 @@ import {
 } from "../actions";
 import { FilterCallback } from "../types";
 
-const useActions = (resourceId: string) => {
+const useActions = <T>(resourceId: string) => {
   const dispatch = useDispatch();
   const initial = useCallback(() => dispatch(requestInitial(resourceId)), [
     dispatch,
     resourceId,
   ]);
-  const success = useCallback(
-    (data: any) => dispatch(requestSuccess(resourceId, data)),
+  const success = useCallback<(data: T) => T>(
+    (data: T) => {
+      dispatch(requestSuccess(resourceId, data));
+      return data;
+    },
     [dispatch, resourceId]
   );
   const failure = useCallback(
@@ -31,7 +34,12 @@ const useActions = (resourceId: string) => {
     },
     [dispatch]
   );
-  return { initial, success, failure, filterCache };
+  return useMemo(() => ({ initial, success, failure, filterCache }), [
+    failure,
+    filterCache,
+    initial,
+    success,
+  ]);
 };
 
 export default useActions;

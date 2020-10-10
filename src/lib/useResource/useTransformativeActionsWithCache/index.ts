@@ -1,11 +1,14 @@
 import { useMemo } from "react";
 import useActions from "../useActions";
-import { Actions } from "../types";
+import { OtherActions } from "../types";
 import useGetterActionWithCache from "../useGetterActionWithCache";
 
-const useTransformativeActionsWithCache = (
+const useTransformativeActionsWithCache = <
+  T extends unknown,
+  A extends OtherActions<T>
+>(
   resourceId: string,
-  actions: Actions
+  actions: { getResource: () => Promise<T> } & A
 ) => {
   const { failure, initial, success } = useActions(resourceId);
   const { getResource, ...transformativeActions } = actions;
@@ -20,8 +23,8 @@ const useTransformativeActionsWithCache = (
           key,
           async (...args: any[]) => {
             initial();
-            value(...args)
-              .then((data) =>
+            (value(...args) as Promise<T | undefined>)
+              .then((data: T | undefined) =>
                 data === undefined ? getResourceWithCache() : success(data)
               )
               .catch((error) => {

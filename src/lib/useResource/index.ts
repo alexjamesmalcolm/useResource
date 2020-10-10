@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import useStoredResource from "./useStoredResource";
-import { FilterCallback, TtlCallback, Actions } from "./types";
+import { FilterCallback, TtlCallback, OtherActions } from "./types";
 import useActions from "./useActions";
 import useGetterActionWithCache from "./useGetterActionWithCache";
 import useTransformativeActionsWithCache from "./useTransformativeActionsWithCache";
 import useAcquireEffect from "./useAcquireEffect";
 
-interface UseResourceResponse<T, A extends Actions<T>> {
-  actions: A;
+interface UseResourceResponse<T, A extends OtherActions<T>> {
+  actions: { getResource: () => Promise<T> } & A;
   isLoading: boolean;
   error: Error | false;
   data: T;
@@ -15,9 +15,9 @@ interface UseResourceResponse<T, A extends Actions<T>> {
   filterCache: (filterCallback: FilterCallback) => void;
 }
 
-const useResource = <T, A extends Actions<T>>(
+const useResource = <T extends unknown, A extends OtherActions<T>>(
   getResourceId: string | (() => string),
-  actions: A,
+  actions: { getResource: () => Promise<T> } & A,
   options: { acquireImmediately?: boolean; ttl?: number | TtlCallback } = {}
 ): UseResourceResponse<T, A> => {
   const { getResource } = actions;
@@ -33,20 +33,24 @@ const useResource = <T, A extends Actions<T>>(
     resourceId,
     getResource
   );
-  const transformativeActionsWithCache = useTransformativeActionsWithCache(
-    resourceId,
-    actions
-  );
+  const transformativeActionsWithCache = useTransformativeActionsWithCache<
+    T,
+    A
+  >(resourceId, actions);
   useAcquireEffect({
     acquireImmediately,
     getResource,
     resourceId,
     ttl,
   });
-  const cachedActions: A = {
-    ...transformativeActionsWithCache,
-    getResource: getResourceWithCache,
-  } as A;
+  const cachedActions = useMemo(
+    () =>
+      ({
+        ...transformativeActionsWithCache,
+        getResource: getResourceWithCache,
+      } as { getResource: () => Promise<T> } & A),
+    [getResourceWithCache, transformativeActionsWithCache]
+  );
   return {
     actions: cachedActions,
     isLoading,

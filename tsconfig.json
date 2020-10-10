@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "outDir": "./output",
     "skipLibCheck": true,
     "strict": true,
@@ -21,11 +17,6 @@
     "jsx": "react",
     "noEmit": true
   },
-  "include": [
-    "src/lib"
-  ],
-  "exclude": [
-    "**/*test.ts",
-    "**/*test.tsx"
-  ]
+  "include": ["src/lib"],
+  "exclude": ["**/*test.ts", "**/*test.tsx"]
 }

@@ -16,8 +16,15 @@ const App = () => {
   // const { isLoading, data } = useResource(getResourceId, { getResource });
   // if (isLoading || !data) return <p>Loading...</p>;
   // console.log(data);
+  const getResource = useCallback(() => Promise.resolve(1), []);
+  const doNothing = useCallback(() => Promise.resolve(), []);
+  const {
+    data,
+    actions: { doNothing: a, getResource: b },
+  } = useResource("hi", { getResource, doNothing });
   return (
-    <Setup />
+    <p>{data}</p>
+    // <Setup />
     // <div>
     //   <pre>
     //     {data.map((planet) => (
