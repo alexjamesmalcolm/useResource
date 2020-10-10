@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from "react";
-import useResource from "../../lib/hooks/useResource";
+import useResource from "../../lib";
 
 const idPrefix = "useJokes";
 
