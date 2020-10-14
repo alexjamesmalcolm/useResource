@@ -1,11 +1,8 @@
 import { useSelector } from "react-redux";
+import { Resource } from "../reducer";
 
-interface RetrievedResource {
-  isLoading: boolean;
+interface RetrievedResource extends Resource {
   isInStore: boolean;
-  data: any;
-  error: Error | false;
-  acquiredDate?: Date;
 }
 
 const useStoredResource = (resourceId: string) => {

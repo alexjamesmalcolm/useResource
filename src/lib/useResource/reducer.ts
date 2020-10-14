@@ -1,11 +1,11 @@
 import { AnyAction, Reducer } from "redux";
 import { actionTypes } from "./actions";
 
-interface Resource {
+export interface Resource {
   isLoading: boolean;
   error?: Error;
   data: any;
-  acquiredDate?: Date;
+  acquiredDate?: string;
 }
 
 interface ResourceHashTable {
@@ -46,7 +46,7 @@ const reducer: Reducer<State, AnyAction> = (
       resource: {
         isLoading: false,
         data: action.data.data,
-        acquiredDate: new Date(),
+        acquiredDate: new Date().toISOString(),
       },
       resourceId: action.data.resourceId,
       state,

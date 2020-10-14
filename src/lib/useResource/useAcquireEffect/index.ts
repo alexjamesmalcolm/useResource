@@ -28,7 +28,7 @@ const useAcquireEffect = ({
       const timeLeft =
         typeof ttl === "function"
           ? ttl(resourceId, data)
-          : ttl - (Date.now() - acquiredDate.getTime());
+          : ttl - (Date.now() - new Date(acquiredDate).getTime());
       if (timeLeft > 0) {
         const timeoutId = setTimeout(() => {
           getResourceWithCache();
