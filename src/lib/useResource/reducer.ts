@@ -1,23 +1,11 @@
+import { AnyAction, Reducer } from "redux";
 import { actionTypes } from "./actions";
-import { FilterCallback } from "./types";
 
 interface Resource {
   isLoading: boolean;
   error?: Error;
   data: any;
   acquiredDate?: Date;
-}
-
-interface ActionData {
-  resourceId: string;
-  data?: any;
-  error?: Error;
-  filterCallback: FilterCallback;
-}
-
-interface Action {
-  type: string;
-  data: ActionData;
 }
 
 interface ResourceHashTable {
@@ -43,7 +31,10 @@ const modifyState = ({
 
 const initialState: State = { resourceHashTable: {} };
 
-const reducer = (state: State = initialState, action: Action) => {
+const reducer: Reducer<State, AnyAction> = (
+  state: State = initialState,
+  action: AnyAction
+) => {
   if (action.type === actionTypes.REQUEST_INITIAL)
     return modifyState({
       resource: { isLoading: true, data: null },
