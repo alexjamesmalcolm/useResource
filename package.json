@@ -1,6 +1,6 @@
 {
   "name": "@alexjamesmalcolm/use-resource",
-  "version": "0.1.25",
+  "version": "0.2.0",
   "description": "A React hook that assists in retrieving remote data and caching via redux by abstracting the Auto Effect pattern.",
   "private": false,
   "license": "MIT",
