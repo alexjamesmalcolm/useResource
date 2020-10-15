@@ -52,9 +52,26 @@ const reducer: Reducer<State, AnyAction> = (
   };
   if (action.type === actionTypes.REQUEST_ASSIGN) {
     const { resourceId, hookId } = action.data;
-    const resource = getResource(resourceId);
-    if (resource?.assignedHookId === undefined)
-      return modifyResource(resourceId, { assignedHookId: hookId });
+    const initialResource: Resource = {
+      data: null,
+      assignedHookId: hookId,
+      isLoading: false,
+    };
+    const resourceHashTable: ResourceHashTable = {
+      [resourceId]: initialResource,
+      ...state.resourceHashTable,
+    };
+    return {
+      resourceHashTable: Object.fromEntries(
+        Object.entries(resourceHashTable).map((entry): [string, Resource] => {
+          if (entry[0] === resourceId)
+            return [entry[0], { ...entry[1], assignedHookId: hookId }];
+          if (entry[1].assignedHookId === hookId)
+            return [entry[0], { ...entry[1], assignedHookId: undefined }];
+          return entry;
+        })
+      ),
+    };
   }
   if (action.type === actionTypes.REQUEST_UNASSIGN) {
     return {
