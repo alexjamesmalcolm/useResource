@@ -12,6 +12,7 @@ const useStoredResource = (resourceId: string) => {
     error,
     isInStore = true,
     acquiredDate,
+    assignedHookId,
   } = useSelector(
     (state: any): RetrievedResource => {
       const { resourceHashTable } = state.useResource;
@@ -25,7 +26,7 @@ const useStoredResource = (resourceId: string) => {
       return requestData || defaultData;
     }
   );
-  return { data, isLoading, error, isInStore, acquiredDate };
+  return { data, isLoading, error, isInStore, acquiredDate, assignedHookId };
 };
 
 export default useStoredResource;

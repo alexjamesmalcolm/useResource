@@ -3,6 +3,7 @@ import { actionTypes } from "./actions";
 
 export interface Resource {
   isLoading: boolean;
+  assignedHookId?: string;
   error?: Error;
   data: any;
   acquiredDate?: string;
@@ -16,50 +17,76 @@ interface State {
   resourceHashTable: ResourceHashTable;
 }
 
-const modifyState = ({
-  state,
-  resourceId,
-  resource,
-}: {
-  state: State;
-  resourceId: any;
-  resource: Resource;
-}): State => ({
-  ...state,
-  resourceHashTable: { ...state.resourceHashTable, [resourceId]: resource },
-});
-
 const initialState: State = { resourceHashTable: {} };
 
 const reducer: Reducer<State, AnyAction> = (
   state: State = initialState,
   action: AnyAction
 ) => {
+  const getResource = (resourceId: string): Resource | undefined =>
+    state.resourceHashTable[resourceId];
+  const modifyResource = (
+    resourceId: string,
+    resource: Partial<Resource>
+  ): State => {
+    const {
+      data = null,
+      isLoading = false,
+      acquiredDate,
+      assignedHookId,
+      error,
+    } = getResource(resourceId) || {};
+    const previousResource = {
+      data,
+      isLoading,
+      acquiredDate,
+      assignedHookId,
+      error,
+    };
+    return {
+      resourceHashTable: {
+        ...state.resourceHashTable,
+        [resourceId]: { ...previousResource, ...resource },
+      },
+    };
+  };
+  if (action.type === actionTypes.REQUEST_ASSIGN) {
+    const { resourceId, hookId } = action.data;
+    const resource = getResource(resourceId);
+    if (resource?.assignedHookId === undefined)
+      return modifyResource(resourceId, { assignedHookId: hookId });
+  }
+  if (action.type === actionTypes.REQUEST_UNASSIGN) {
+    return {
+      resourceHashTable: Object.fromEntries(
+        Object.entries(state.resourceHashTable).map((entry): [
+          string,
+          Resource
+        ] =>
+          entry[1].assignedHookId === action.data.hookId
+            ? [entry[0], { isLoading: false, data: null }]
+            : entry
+        )
+      ),
+    };
+  }
   if (action.type === actionTypes.REQUEST_INITIAL)
-    return modifyState({
-      resource: { isLoading: true, data: null },
-      resourceId: action.data.resourceId,
-      state,
+    return modifyResource(action.data.resourceId, {
+      isLoading: true,
+      assignedHookId: undefined,
+      error: undefined,
+      acquiredDate: undefined,
     });
   if (action.type === actionTypes.REQUEST_SUCCESS)
-    return modifyState({
-      resource: {
-        isLoading: false,
-        data: action.data.data,
-        acquiredDate: new Date().toISOString(),
-      },
-      resourceId: action.data.resourceId,
-      state,
+    return modifyResource(action.data.resourceId, {
+      isLoading: false,
+      data: action.data.data,
+      acquiredDate: new Date().toISOString(),
     });
   if (action.type === actionTypes.REQUEST_FAILURE)
-    return modifyState({
-      resource: {
-        isLoading: false,
-        error: action.data.error,
-        data: null,
-      },
-      resourceId: action.data.resourceId,
-      state,
+    return modifyResource(action.data.resourceId, {
+      isLoading: false,
+      error: action.data.error,
     });
   if (action.type === actionTypes.CLEAR_CACHED_RESOURCE) {
     const { filterCallback } = action.data;
