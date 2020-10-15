@@ -9,7 +9,7 @@ import useAcquireEffect from "./useAcquireEffect";
 interface UseResourceResponse<T, A extends OtherActions<T>> {
   actions: { getResource: () => Promise<T> } & A;
   isLoading: boolean;
-  error: Error | false;
+  error?: Error;
   data: T;
   isInStore: boolean;
   filterCache: (filterCallback: FilterCallback) => void;

@@ -2,12 +2,22 @@ import { FilterCallback } from "./types";
 
 const p = "useResource";
 export const actionTypes = {
+  REQUEST_ASSIGN: `${p}_REQUEST_ASSIGN`,
+  REQUEST_UNASSIGN: `${p}_REQUEST_UNASSIGN`,
   REQUEST_INITIAL: `${p}_REQUEST_INITIAL`,
   REQUEST_SUCCESS: `${p}_REQUEST_SUCCESS`,
   REQUEST_FAILURE: `${p}_REQUEST_FAILURE`,
   CLEAR_CACHED_RESOURCE: `${p}_CLEAR_CACHED_RESOURCE`,
 };
 
+export const requestAssign = (resourceId: string, hookId: string) => ({
+  type: actionTypes.REQUEST_ASSIGN,
+  data: { resourceId, hookId },
+});
+export const requestUnassign = (hookId: string) => ({
+  type: actionTypes.REQUEST_UNASSIGN,
+  data: { hookId },
+});
 export const requestInitial = (resourceId: string) => ({
   type: actionTypes.REQUEST_INITIAL,
   data: { resourceId },

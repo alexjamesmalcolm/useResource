@@ -1,7 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import useGetterActionWithCache from "../useGetterActionWithCache";
 import { TtlCallback } from "../types";
 import useStoredResource from "../useStoredResource";
+import useActions from "../useActions";
+
+const uniqueIdentifier = () =>
+  "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 
 const useAcquireEffect = ({
   acquireImmediately,
@@ -14,21 +22,50 @@ const useAcquireEffect = ({
   getResource: () => Promise<any>;
   ttl: number | TtlCallback;
 }) => {
+  const hookId = useMemo<string>(() => uniqueIdentifier(), []);
   const getResourceWithCache = useGetterActionWithCache(
     resourceId,
     getResource
   );
-  const { acquiredDate, data, isInStore, isLoading } = useStoredResource(
-    resourceId
+  const {
+    acquiredDate,
+    data,
+    isInStore,
+    isLoading,
+    assignedHookId,
+  } = useStoredResource(resourceId);
+  const { assign, unassign } = useActions(resourceId);
+  useEffect(() => {
+    if (
+      assignedHookId === undefined &&
+      !isLoading &&
+      !isInStore &&
+      acquireImmediately
+    ) {
+      assign(hookId);
+    }
+  }, [
+    acquireImmediately,
+    assign,
+    assignedHookId,
+    hookId,
+    isInStore,
+    isLoading,
+  ]);
+  useEffect(
+    () => () => {
+      unassign(hookId);
+    },
+    [hookId, unassign]
   );
   useEffect(() => {
-    if (!isLoading && !isInStore && acquireImmediately) {
+    if (assignedHookId === hookId) {
       getResourceWithCache();
     } else if (acquiredDate && ttl) {
       const timeLeft =
         typeof ttl === "function"
           ? ttl(resourceId, data)
-          : ttl - (Date.now() - acquiredDate.getTime());
+          : ttl - (Date.now() - new Date(acquiredDate).getTime());
       if (timeLeft > 0) {
         const timeoutId = setTimeout(() => {
           getResourceWithCache();
@@ -39,12 +76,11 @@ const useAcquireEffect = ({
       }
     }
   }, [
-    acquireImmediately,
     acquiredDate,
+    assignedHookId,
     data,
     getResourceWithCache,
-    isInStore,
-    isLoading,
+    hookId,
     resourceId,
     ttl,
   ]);

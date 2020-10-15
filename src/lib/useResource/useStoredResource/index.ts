@@ -1,11 +1,8 @@
 import { useSelector } from "react-redux";
+import { Resource } from "../reducer";
 
-interface RetrievedResource {
-  isLoading: boolean;
+interface RetrievedResource extends Resource {
   isInStore: boolean;
-  data: any;
-  error: Error | false;
-  acquiredDate?: Date;
 }
 
 const useStoredResource = (resourceId: string) => {
@@ -15,6 +12,7 @@ const useStoredResource = (resourceId: string) => {
     error,
     isInStore = true,
     acquiredDate,
+    assignedHookId,
   } = useSelector(
     (state: any): RetrievedResource => {
       const { resourceHashTable } = state.useResource;
@@ -28,7 +26,7 @@ const useStoredResource = (resourceId: string) => {
       return requestData || defaultData;
     }
   );
-  return { data, isLoading, error, isInStore, acquiredDate };
+  return { data, isLoading, error, isInStore, acquiredDate, assignedHookId };
 };
 
 export default useStoredResource;

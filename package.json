@@ -1,6 +1,9 @@
 {
   "name": "@alexjamesmalcolm/use-resource",
+  "version": "0.1.25",
   "description": "A React hook that assists in retrieving remote data and caching via redux by abstracting the Auto Effect pattern.",
+  "private": false,
+  "license": "MIT",
   "author": {
     "name": "Alex Malcolm",
     "email": "alexjamesmalcolm@gmail.com",
@@ -23,9 +26,10 @@
     "url": "https://github.com/alexjamesmalcolm/use-resource.git"
   },
   "homepage": "http://www.alexjamesmalcolm.com/use-resource/",
-  "private": false,
-  "version": "0.1.25",
   "main": "output/index.js",
+  "files": [
+    "output"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "rm -rf output && tsc --project tsconfig.package.json",
@@ -35,22 +39,23 @@
     "output-size": "node ./get-size.js",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
-  "files": [
-    "output"
-  ],
   "peerDependencies": {
     "react": "^16.13.1",
     "redux": "^2.0.0 || ^3.0.0 || ^4.0.0-0",
     "react-redux": "^7.2.0"
   },
-  "license": "MIT",
   "devDependencies": {
+    "@reduxjs/toolkit": "^1.2.5",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "@types/enzyme": "^3.10.7",
     "@types/enzyme-adapter-react-16": "^1.0.6",
-    "@types/jest": "^26.0.14",
-    "@types/react": "^16.9.49",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-redux": "^7.1.9",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.7",
     "auto-changelog": "^2.2.1",
     "cross-env": "^7.0.2",
     "enzyme": "^3.11.0",
@@ -58,11 +63,10 @@
     "get-folder-size": "^2.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-redux": "^7.2.1",
-    "react-scripts": "^3.4.3",
-    "react-test-renderer": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-scripts": "3.4.3",
     "redux": "^4.0.5",
-    "typescript": "^4.0.3"
+    "typescript": "~3.8.2"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -77,11 +81,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
     ]
   }
 }

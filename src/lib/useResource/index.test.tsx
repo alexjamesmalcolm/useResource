@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import useResource from ".";
@@ -13,7 +13,7 @@ const wait = async (time: number, callback: Function = () => {}) =>
 
 const makeWrapper = () => {
   const store = createStore(combineReducers({ useResource: reducer }));
-  const Wrapper = ({ children }) => (
+  const Wrapper = ({ children }: { children: ReactNode }) => (
     <Provider store={store}>{children}</Provider>
   );
   return Wrapper;
@@ -25,8 +25,8 @@ const UnderTest = ({
   transformativeAction,
   ttl,
 }: {
-  resourceId;
-  getResource;
+  resourceId: string | (() => string);
+  getResource: () => Promise<unknown>;
   ttl?: number | TtlCallback;
   transformativeAction?: () => Promise<any>;
 }) => {
@@ -82,7 +82,7 @@ describe("useResource", () => {
   it("should only keep data for 2 seconds due to 2000 ttl", async () =>
     new Promise((resolve) => {
       const Wrapper = makeWrapper();
-      const resourceId = Date.now() + Math.random();
+      const resourceId = (Date.now() + Math.random()).toString();
       const ttl = 2000;
       const getResource = jest
         .fn()
@@ -105,7 +105,7 @@ describe("useResource", () => {
 
   it("should display an error when the getResource function fails", async () => {
     const Wrapper = makeWrapper();
-    const resourceId = Date.now() + Math.random();
+    const resourceId = (Date.now() + Math.random()).toString();
     const errorMessage = "Whoopsie there was a problem";
     const getResource = jest
       .fn()
@@ -122,7 +122,7 @@ describe("useResource", () => {
 
   it("should use a transformative action that returns the new state", async () => {
     const Wrapper = makeWrapper();
-    const resourceId = Date.now() + Math.random();
+    const resourceId = (Date.now() + Math.random()).toString();
     const initial = "initial data";
     const final = "final data";
     const getResource = jest
@@ -150,7 +150,7 @@ describe("useResource", () => {
 
   it("should use a transformative action that does not return the new state", async () => {
     const Wrapper = makeWrapper();
-    const resourceId = Date.now() + Math.random();
+    const resourceId = (Date.now() + Math.random()).toString();
     const initial = "initial data";
     const final = "final data";
     let state = initial;
@@ -179,7 +179,7 @@ describe("useResource", () => {
   });
   it("should accept a function for ttl", async () => {
     const Wrapper = makeWrapper();
-    const resourceId = Date.now() + Math.random();
+    const resourceId = (Date.now() + Math.random()).toString();
     const getResource = jest
       .fn()
       .mockImplementation(() => Promise.resolve("result"));
@@ -195,5 +195,29 @@ describe("useResource", () => {
     );
     await wait(1000, () => expect(getResource).toBeCalledTimes(1));
     await wait(3000, () => expect(getResource).toBeCalledTimes(2));
+  });
+  it("should only call getResource once", async () => {
+    const Wrapper = makeWrapper();
+    const UnderTest = ({
+      resourceId,
+      getResource,
+    }: {
+      resourceId: string;
+      getResource: () => Promise<string>;
+    }) => {
+      useResource(resourceId, { getResource });
+      useResource(resourceId, { getResource });
+      return <p>This is some content</p>;
+    };
+    const resourceId = "hello-there";
+    const getResource = jest
+      .fn()
+      .mockReturnValue(Promise.resolve("so uncivilized"));
+    mount(
+      <Wrapper>
+        <UnderTest getResource={getResource} resourceId={resourceId} />
+      </Wrapper>
+    );
+    await wait(1000, () => expect(getResource).toBeCalledTimes(1));
   });
 });
