@@ -10,7 +10,7 @@ interface UseResourceResponse<T, A extends OtherActions<T>> {
   actions: { getResource: () => Promise<T> } & A;
   isLoading: boolean;
   error?: Error;
-  data: T;
+  data?: T;
   isInStore: boolean;
   filterCache: (filterCallback: FilterCallback) => void;
 }
@@ -51,14 +51,17 @@ const useResource = <T extends unknown, A extends OtherActions<T>>(
       } as { getResource: () => Promise<T> } & A),
     [getResourceWithCache, transformativeActionsWithCache]
   );
-  return {
-    actions: cachedActions,
-    isLoading,
-    error,
-    data,
-    isInStore,
-    filterCache,
-  };
+  return useMemo<UseResourceResponse<T, A>>(
+    () => ({
+      actions: cachedActions,
+      isLoading,
+      error,
+      data,
+      isInStore,
+      filterCache,
+    }),
+    [cachedActions, data, error, filterCache, isInStore, isLoading]
+  );
 };
 
 export default useResource;
