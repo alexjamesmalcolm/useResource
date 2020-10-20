@@ -5,7 +5,7 @@ export interface Resource {
   isLoading: boolean;
   assignedHookId?: string;
   error?: Error;
-  data: any;
+  data?: any;
   acquiredDate?: string;
 }
 
@@ -30,7 +30,7 @@ const reducer: Reducer<State, AnyAction> = (
     resource: Partial<Resource>
   ): State => {
     const {
-      data = null,
+      data = undefined,
       isLoading = false,
       acquiredDate,
       assignedHookId,
@@ -53,7 +53,7 @@ const reducer: Reducer<State, AnyAction> = (
   if (action.type === actionTypes.REQUEST_ASSIGN) {
     const { resourceId, hookId } = action.data;
     const initialResource: Resource = {
-      data: null,
+      data: undefined,
       assignedHookId: hookId,
       isLoading: false,
     };
@@ -81,7 +81,7 @@ const reducer: Reducer<State, AnyAction> = (
           Resource
         ] =>
           entry[1].assignedHookId === action.data.hookId
-            ? [entry[0], { isLoading: false, data: null }]
+            ? [entry[0], { isLoading: false, data: undefined }]
             : entry
         )
       ),
