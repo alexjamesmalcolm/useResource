@@ -5,7 +5,7 @@ interface RetrievedResource extends Resource {
   isInStore: boolean;
 }
 
-const useStoredResource = (resourceId: string) => {
+const useStoredResource = (resourceId: string, acquireImmediately: boolean) => {
   const {
     data,
     isLoading,
@@ -18,8 +18,8 @@ const useStoredResource = (resourceId: string) => {
       const { resourceHashTable } = state.useResource;
       const requestData = resourceHashTable[resourceId];
       const defaultData = {
-        data: null,
-        isLoading: false,
+        data: undefined,
+        isLoading: acquireImmediately,
         error: false,
         isInStore: false,
       };

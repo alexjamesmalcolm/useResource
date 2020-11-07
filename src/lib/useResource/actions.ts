@@ -10,9 +10,13 @@ export const actionTypes = {
   CLEAR_CACHED_RESOURCE: `${p}_CLEAR_CACHED_RESOURCE`,
 };
 
-export const requestAssign = (resourceId: string, hookId: string) => ({
+export const requestAssign = (
+  resourceId: string,
+  hookId: string,
+  acquireImmediately: boolean
+) => ({
   type: actionTypes.REQUEST_ASSIGN,
-  data: { resourceId, hookId },
+  data: { resourceId, hookId, acquireImmediately },
 });
 export const requestUnassign = (hookId: string) => ({
   type: actionTypes.REQUEST_UNASSIGN,
