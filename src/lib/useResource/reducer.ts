@@ -74,13 +74,15 @@ const reducer: Reducer<State, AnyAction> = (
     };
   }
   if (action.type === actionTypes.REQUEST_UNASSIGN) {
+    const entries = Object.entries(state.resourceHashTable);
+    const isResourceEntryAssignedToThisHook = (
+      entry: [string, Resource]
+    ): boolean => entry[1].assignedHookId === action.data.hookId;
+    if (!entries.some(isResourceEntryAssignedToThisHook)) return state;
     return {
       resourceHashTable: Object.fromEntries(
-        Object.entries(state.resourceHashTable).map((entry): [
-          string,
-          Resource
-        ] =>
-          entry[1].assignedHookId === action.data.hookId
+        entries.map((entry): [string, Resource] =>
+          isResourceEntryAssignedToThisHook(entry)
             ? [entry[0], { isLoading: false, data: undefined }]
             : entry
         )
