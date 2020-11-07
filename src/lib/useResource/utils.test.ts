@@ -10,6 +10,6 @@ const doNTimes = (action: Function, times: number) => {
 
 describe("uniqueIdentifier", () => {
   it("should complete quickly", () => {
-    doNTimes(uniqueIdentifier, 1000000);
+    doNTimes(uniqueIdentifier, 10000);
   });
 });
