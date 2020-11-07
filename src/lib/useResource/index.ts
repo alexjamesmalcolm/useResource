@@ -27,7 +27,10 @@ const useResource = <T extends unknown, A extends OtherActions<T>>(
       typeof getResourceId === "function" ? getResourceId() : getResourceId,
     [getResourceId]
   );
-  const { data, error, isInStore, isLoading } = useStoredResource(resourceId);
+  const { data, error, isInStore, isLoading } = useStoredResource(
+    resourceId,
+    acquireImmediately
+  );
   const { filterCache } = useActions(resourceId);
   const getResourceWithCache = useGetterActionWithCache(
     resourceId,

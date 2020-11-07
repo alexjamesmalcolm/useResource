@@ -51,11 +51,11 @@ const reducer: Reducer<State, AnyAction> = (
     };
   };
   if (action.type === actionTypes.REQUEST_ASSIGN) {
-    const { resourceId, hookId } = action.data;
+    const { resourceId, hookId, acquireImmediately } = action.data;
     const initialResource: Resource = {
       data: undefined,
       assignedHookId: hookId,
-      isLoading: false,
+      isLoading: acquireImmediately,
     };
     const resourceHashTable: ResourceHashTable = {
       [resourceId]: initialResource,

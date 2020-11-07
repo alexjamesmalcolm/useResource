@@ -13,7 +13,8 @@ import { FilterCallback } from "../types";
 const useActions = <T>(resourceId: string) => {
   const dispatch = useDispatch();
   const assign = useCallback(
-    (hookId: string) => dispatch(requestAssign(resourceId, hookId)),
+    (hookId: string, acquireImmediately: boolean) =>
+      dispatch(requestAssign(resourceId, hookId, acquireImmediately)),
     [dispatch, resourceId]
   );
   const unassign = useCallback(

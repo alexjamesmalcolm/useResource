@@ -33,16 +33,11 @@ const useAcquireEffect = ({
     isInStore,
     isLoading,
     assignedHookId,
-  } = useStoredResource(resourceId);
+  } = useStoredResource(resourceId, acquireImmediately);
   const { assign, unassign } = useActions(resourceId);
   useEffect(() => {
-    if (
-      assignedHookId === undefined &&
-      !isLoading &&
-      !isInStore &&
-      acquireImmediately
-    ) {
-      assign(hookId);
+    if (assignedHookId === undefined && !isInStore && acquireImmediately) {
+      assign(hookId, acquireImmediately);
     }
   }, [
     acquireImmediately,
