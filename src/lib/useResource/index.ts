@@ -11,6 +11,7 @@ interface UseResourceResponse<T, A extends OtherActions<T>> {
   isLoading: boolean;
   error?: Error;
   data?: T;
+  hasData: boolean;
   isInStore: boolean;
   filterCache: (filterCallback: FilterCallback) => void;
 }
@@ -60,6 +61,7 @@ const useResource = <T extends unknown, A extends OtherActions<T>>(
       isLoading,
       error,
       data,
+      hasData: data !== undefined,
       isInStore,
       filterCache,
     }),
